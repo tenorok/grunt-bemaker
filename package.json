@@ -1,0 +1,19 @@
+{
+    "name": "grunt-bemaker",
+    "description": "Plugin to build BEM project",
+    "version": "0.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tenorok/grunt-bemaker.git"
+    },
+    "author": {
+        "name": "Artem Kurbatov",
+        "email": "mail@tenorok.ru",
+        "homepage": "http://tenorok.ru"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "bemaker": "~0.1.0",
+        "moment": "~2.7.0"
+    }
+}
