@@ -41,8 +41,7 @@ module.exports = function(grunt) {
             dependext: data.dependext,
             jsdoctag: data.jsdoctag,
             before: data.before,
-            after: data.after,
-            cwd: process.cwd()
+            after: data.after
         });
 
         make
