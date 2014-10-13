@@ -13,7 +13,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "bemaker": "~0.1.0",
+        "bemaker": "~0.1.3",
         "moment": "~2.7.0"
     }
 }
