@@ -14,8 +14,7 @@ module.exports = function(grunt) {
             data = this.data,
 
             cli = new Cli(),
-            timeStart = moment(),
-            verbose;
+            timeStart = moment();
 
         cli.verboseAliases = {
             log: { log: console.log },
@@ -24,13 +23,7 @@ module.exports = function(grunt) {
             error: { error: console.error }
         };
 
-        if(data.verbose) {
-            verbose = cli.resolveVerboseAliases(data.verbose.toString());
-        }
-
-        var log = new Log(verbose);
-
-        log.info({ text: 'build started' });
+        var log = new Log({});
 
         var make = new Make({
             directories: Cli.resolveAbsolutePath(data.directories || []),
@@ -46,55 +39,72 @@ module.exports = function(grunt) {
 
         make
             .on('level', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'walk',
                     path: data.path,
                     description: 'directory'
-                });
+                }));
             })
             .on('block', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'walk',
                     text: data.name,
                     description: 'block'
-                });
+                }));
             })
             .on('file', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'walk',
                     path: data.path,
                     description: 'file'
-                });
+                }));
             })
             .on('depend', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'read',
                     path: data.path,
                     description: 'dependencies'
-                });
+                }));
             })
             .on('filter', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'filter',
                     text: data.block
-                });
+                }));
             })
             .on('extension', function(data) {
-                log.log({
+                grunt.verbose.writeln(log.log({
                     operation: 'group',
                     text: data.name,
                     description: 'extension'
-                });
+                }));
             })
             .on('save', function(data) {
-                log.info({
+                grunt.log.writeln(log.info({
                     operation: 'write',
                     path: data.path
-                });
+                }));
+            })
+            .on('loop', function(branch) {
+                grunt.log.writeln(log.warn({
+                    operation: 'loop',
+                    text: branch.join(' → ')
+                }));
+            })
+            .on('unexist', function(data) {
+                var blocks = [];
+                if(data.name) {
+                    blocks.push(data.name);
+                }
+                blocks.push(data.require);
+                grunt.log.writeln(log.warn({
+                    operation: 'unexist',
+                    text: blocks.join(' → ')
+                }));
             });
 
         make.build().then(function() {
-            log.info({ text: 'build finished', total: moment() - timeStart });
+            grunt.log.writeln(log.info({ text: 'total time', total: moment() - timeStart }));
             done();
         });
     });
